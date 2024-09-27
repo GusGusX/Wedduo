@@ -1,0 +1,204 @@
+{% load static %}
+{% load custom_tags %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="th">
+{% tailwind_css %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แดชบอร์ดผู้ใช้</title>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+
+    <script>
+        // ฟังก์ชันเพื่อดูข้อมูลผู้เช่า
+        function viewTenant(roomNumber) {
+            fetch(`/tenant-info/${roomNumber}/`)
+                .then(response => response.json())
+                .then(data => {
+                    alert(`ข้อมูลผู้เช่าสำหรับห้อง ${roomNumber}:\nชื่อ: ${data.name}\nเบอร์ติดต่อ: ${data.phone}`);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // ฟังก์ชันเพื่อจองห้องพัก
+        function bookRoom(roomNumber) {
+            fetch(`/book-room/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({ 'room_number': roomNumber })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`จองห้อง ${roomNumber} สำเร็จ!`);
+                    location.reload(); // โหลดหน้าใหม่เพื่ออัปเดตสถานะ
+                } else {
+                    alert(`ไม่สามารถจองห้อง ${roomNumber} ได้: ${data.error}`);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // ฟังก์ชันเพื่อแก้ไขการจองห้อง
+        function editBooking(bookingId) {
+            const newDate = prompt("กรุณากรอกวันที่ใหม่สำหรับการจองนี้ (YYYY-MM-DD):");
+            if (newDate) {
+                fetch(`/edit-booking/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({ 'booking_id': bookingId, 'new_date': newDate })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`แก้ไขการจองห้องสำเร็จ!`);
+                        location.reload(); // โหลดหน้าใหม่เพื่ออัปเดตสถานะ
+                    } else {
+                        alert(`ไม่สามารถแก้ไขการจองได้: ${data.error}`);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        // ฟังก์ชันเพื่อโหลดการแจ้งเตือน
+        function loadNotifications() {
+            fetch('/notifications/')
+                .then(response => response.json())
+                .then(data => {
+                    const dropdownContent = document.querySelector('.notification-content');
+                    dropdownContent.innerHTML = ''; // ล้างเนื้อหาก่อน
+                    data.notifications.forEach(notification => {
+                        const notificationItem = document.createElement('div');
+                        notificationItem.className = 'p-3 hover:bg-orange-50 cursor-pointer flex items-center space-x-3 transition-all transform hover:translate-x-1';
+                        notificationItem.innerHTML = 
+                            `<span class="bg-blue-100 text-blue-600 p-2 rounded-full">🔔</span>
+                            <span class="text-black">${notification.message}</span>`;
+                        dropdownContent.appendChild(notificationItem);
+                    });
+                })
+                .catch(error => console.error('Error loading notifications:', error));
+        }
+
+        // ฟังก์ชันเพื่อสลับ dropdown ของการแจ้งเตือน
+        function toggleDropdown() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.toggle('hidden');
+            if (!dropdown.classList.contains('hidden')) {
+                loadNotifications(); // เรียกใช้ฟังก์ชันเพื่อโหลดการแจ้งเตือนเมื่อเปิด dropdown
+            }
+        }
+
+        // ฟังก์ชันเพื่อปิด dropdown
+        function closeDropdown() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.add('hidden');
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100">
+    <div class="p-6 min-h-screen">
+        <!-- หัวข้อ -->
+        <div class="flex justify-between items-center bg-orange-500 p-4 text-white rounded-lg shadow-lg mb-6">
+            <div class="text-lg font-bold">JKH Dormitory</div>
+            <div class="relative flex items-center space-x-4">
+                <!-- Button กระดิ่ง -->
+                <button onclick="toggleDropdown()"
+                    class="bg-white p-2 rounded-full text-orange-500 shadow-md hover:bg-gray-100 transition-colors relative">
+                    🔔
+                </button>
+
+                <!-- Dropdown -->
+                <div id="notification-dropdown"
+                    class="absolute right-0 mt-8 w-64 bg-white rounded-lg shadow-lg hidden z-10 transition duration-200 ease-out transform scale-95 origin-top-right">
+                    <div class="p-4 text-black font-semibold border-b bg-orange-100 rounded-t-lg">การแจ้งเตือน</div>
+                    <div class="notification-content"> <!-- ที่นี่จะเป็นที่ใส่เนื้อหาการแจ้งเตือน -->
+                    </div>
+                    <div class="border-t">
+                        <button onclick="closeDropdown()"
+                            class="w-full p-2 text-white bg-red-500 hover:bg-red-600 rounded-b-lg transition-colors">ปิด</button>
+                    </div>
+                </div>
+
+                <!-- ปุ่มออกจากระบบ -->
+                <a class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors"
+                    href="{% url 'logout' %}">ออกจากระบบ</a>
+            </div>
+        </div>
+
+        <!-- ส่วนข้อมูลห้องพัก -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">ข้อมูลห้องพัก</h2>
+            <table class="min-w-full bg-white rounded-lg shadow-lg">
+                <thead>
+                    <tr class="bg-orange-100 text-gray-600">
+                        <th class="py-2 px-4">ห้อง</th>
+                        <th class="py-2 px-4">สถานะ</th>
+                        <th class="py-2 px-4">ราคา / วัน</th>
+                        <th class="py-2 px-4">ดำเนินการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for room in rooms %}
+                    <tr class="text-gray-600 hover:bg-orange-50 transition-colors">
+                        <td class="py-2 px-4 font-semibold">{{ room.number }}</td>
+                        <td class="py-2 px-4">{{ room.status|setstatus }}</td>
+                        <td class="py-2 px-4">{{ room.price }} บาท</td>
+                        <td class="py-2 px-4">
+                            <button onclick="bookRoom('{{ room.number }}')"
+                                class="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-400 transition-colors">จอง</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ประวัติการจอง -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">ประวัติการจอง</h2>
+            <table class="min-w-full bg-white rounded-lg shadow-lg">
+                <thead>
+                    <tr class="bg-orange-100 text-gray-600">
+                        <th class="py-2 px-4">ห้อง</th>
+                        <th class="py-2 px-4">วันที่จอง</th>
+                        <th class="py-2 px-4">สถานะ</th>
+                        <th class="py-2 px-4">ดำเนินการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr class="text-gray-600 hover:bg-orange-50 transition-colors">
+                        <td class="py-2 px-4 font-semibold">{{ booking.room.number }}</td>
+                        <td class="py-2 px-4">{{ booking.date }}</td>
+                        <td class="py-2 px-4">{{ booking.status }}</td>
+                        <td class="py-2 px-4">
+                            <button onclick="editBooking('{{ booking.id }}')"
+                                class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-400 transition-colors">
+                                แก้ไข
+                            </button>
+                            <button onclick="cancelBooking('{{ booking.id }}')"
+                                class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-400 transition-colors">
+                                ยกเลิก
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr class="text-gray-600">
+                        <td colspan="4" class="py-2 text-center">ไม่มีประวัติการจอง</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

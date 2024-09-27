@@ -1,0 +1,31 @@
+<!-- templates/signup.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/app.css' %}" rel="stylesheet">
+    <title>ลงทะเบียน</title>
+</head>
+<body>
+    <div class="bg-white p-8 rounded shadow-md w-96 mx-auto mt-20">
+        <h2 class="text-2xl font-bold mb-6 text-center">ลงทะเบียน</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">ชื่อผู้ใช้</label>
+                <input type="text" name="username" id="username" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
+                <input type="password" name="password" id="password" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-md hover:bg-indigo-500">ลงทะเบียน</button>
+        </form>
+        <div class="mt-4 text-center">
+            <a href="{% url 'login' %}" class="text-indigo-600 hover:underline">เข้าสู่ระบบ</a>
+        </div>
+    </div>
+</body>
+</html>
