@@ -1,0 +1,38 @@
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ล็อกอิน</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-white flex items-center justify-center min-h-screen">
+    <div class="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">ล็อกอิน</h2>
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            <div class="mb-4">
+                <p>username</p>
+                <label for="username" class="block mb-2 text-sm font-medium text-gray-900">{{ form.username.label }}</label>
+                <input type="text" name="username" required class="bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="ชื่อผู้ใช้">
+            </div>
+            <p>password</p>
+            <div class="mb-4">
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900">{{ form.password.label }}</label>
+                <input type="password" name="password" required class="bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="รหัสผ่าน">
+            </div>
+            <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">ล็อกอิน</button>
+            <p class="text-sm font-light text-gray-500 text-center">
+                ยังไม่มีบัญชี? <a href="{% url 'register' %}" class="text-blue-600 hover:text-blue-800">ลงทะเบียน</a>
+            </p>
+        </form>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="text-red-500 text-sm mt-2">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>
