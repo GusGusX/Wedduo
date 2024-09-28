@@ -17,11 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from room.views import login_view  # นำเข้าฟังก์ชัน login_view
+from room.views import *  # นำเข้าฟังก์ชัน login_view
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('room/', include('room.urls')),
-    path('', login_view, name='login'),  # เพิ่ม path สำหรับหน้า login
+    path('', user_login, name='login'),  # เพิ่ม path สำหรับหน้า login
 ]
