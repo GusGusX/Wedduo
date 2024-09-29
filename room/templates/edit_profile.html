@@ -1,0 +1,57 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="th">
+    {% tailwind_css %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/tailwind.css' %}" rel="stylesheet">
+    <title>แก้ไขโปรไฟล์</title>
+</head>
+<body class="bg-gray-100">
+
+<div class="container mx-auto mt-10">
+    <div class="bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">แก้ไขโปรไฟล์</h1>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="username" class="block text-lg font-medium text-gray-700">ชื่อผู้ใช้</label>
+                <input type="text" name="username" id="username" value="{{ user.username }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
+            </div>
+
+            <div>
+                <label for="email" class="block text-lg font-medium text-gray-700">อีเมล</label>
+                <input type="email" name="email" id="email" value="{{ user.email }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
+            </div>
+
+            <div>
+                <label for="address" class="block text-lg font-medium text-gray-700">ที่อยู่</label>
+                <input type="text" name="address" id="address" value="{{ user_profile.address }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
+            </div>
+
+            <div>
+                <label for="phone" class="block text-lg font-medium text-gray-700">เบอร์โทร</label>
+                <input type="text" name="phone" id="phone" value="{{ user_profile.phone }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
+            </div>
+
+            <div>
+                <label for="profile_picture" class="block text-lg font-medium text-gray-700">รูปโปรไฟล์</label>
+                <input type="file" name="profile_picture" id="profile_picture" accept="image/*" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
+            </div>
+
+            <div class="flex justify-center">
+                <button type="submit" class="mt-4 inline-block bg-orange-500 text-white py-3 px-6 rounded-full hover:bg-orange-600 transition">บันทึกการเปลี่ยนแปลง</button>
+            </div>
+        </form>
+
+        <div class="mt-4 text-center">
+            <a href="{% url 'user_dashboard' %}" class="text-gray-600 hover:underline">ยกเลิก</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

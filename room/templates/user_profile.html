@@ -1,0 +1,38 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="th">
+    {% tailwind_css %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/tailwind.css' %}" rel="stylesheet">
+    <title>โปรไฟล์ผู้ใช้</title>
+</head>
+<body class="bg-gray-100">
+
+<div class="container mx-auto mt-10">
+    <div class="bg-white p-8 rounded-lg shadow-md">
+        <div class="flex items-center">
+            <img src="{% static 'images/profile.png' %}" alt="โปรไฟล์" class="w-28 h-28 rounded-full border-4 border-orange-500 shadow-lg">
+            <div class="ml-6">
+                <h1 class="text-3xl font-bold text-gray-800">ชื่อผู้ใช้</h1>
+                <p class="text-lg text-gray-600">อีเมล: <span class="text-orange-500">user@example.com</span></p>
+                <p class="text-lg text-gray-600">เข้าร่วมเมื่อ: <span class="text-orange-500">มกราคม 2022</span></p>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b-2 border-orange-500 pb-2">ข้อมูลเพิ่มเติม</h2>
+            <p class="text-gray-700 mt-2">ที่อยู่: <span class="text-gray-800">123 ถนน ตัวอย่าง, กรุงเทพฯ, ประเทศไทย</span></p>
+            <p class="text-gray-700">เบอร์โทร: <span class="text-gray-800">012-345-6789</span></p>
+        </div>
+
+        <div class="mt-6">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b-2 border-orange-500 pb-2">การตั้งค่า</h2>
+            <a href="{% url 'edit_profile' %}" class="mt-2 inline-block bg-orange-500 text-white py-3 px-6 rounded-full hover:bg-orange-600 transition">แก้ไขโปรไฟล์</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

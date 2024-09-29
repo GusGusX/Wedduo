@@ -1,7 +1,12 @@
 from django import forms
 from .models import Room, Booking, Feedback, User
 from django.contrib.auth.forms import UserCreationForm
+from .models import UserProfile
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['address', 'phone', 'profile_picture'] 
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
