@@ -1,7 +1,20 @@
 from django import forms
+from django.contrib.auth.forms import PasswordChangeForm
+from django.utils.translation import gettext_lazy as _
 from .models import Room, Booking, Feedback, User
 from django.contrib.auth.forms import UserCreationForm
+from .models import UserProfile
 
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    old_password = forms.CharField(label="Your name", widget=forms.PasswordInput)
+    new_password1 = forms.CharField(label=_("รหัสผ่านใหม่"), widget=forms.PasswordInput)
+    new_password2 = forms.CharField(label=_("ยืนยันรหัสผ่านใหม่"), widget=forms.PasswordInput)
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['bio', 'profile_picture', 'address', 'phone'] 
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)

@@ -13,7 +13,7 @@ class RoomAdmin(admin.ModelAdmin):
     list_filter = ('booking_status',)
 
 @admin.register(Booking)
-class BookingAdmin(admin.ModelAdmin):
+class BookingAadmin(admin.ModelAdmin):
     list_display = ('user', 'room', 'start_date', 'end_date', 'status', 'booking_date')
     search_fields = ('user__username', 'room__room_name')
     list_filter = ('status',)

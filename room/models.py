@@ -1,6 +1,15 @@
 from django.db import models
 # User Model สำหรับข้อมูลผู้ใช้
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
+from django.contrib.auth.models import User
+from django.conf import settings
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True)  
+    phone = models.CharField(max_length=20, blank=True)  
 
 class User(AbstractUser):
     ROLE_CHOICES = [
