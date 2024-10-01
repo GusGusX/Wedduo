@@ -11,7 +11,11 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('login/',user_login, name='login'),
     path('logout/',logout, name='user_login'),
+    path('history/',history, name='history'),
+
+    #เพิ่มห้อง admin
     path('add_room/',add_room, name='add_room'),
+<<<<<<< HEAD
     path('profile/', profile_view, name='profile'),
     path('profile/', user_profile, name='user_profile'),
     path('profile/edit/', edit_profile, name='edit_profile'),
@@ -23,4 +27,16 @@ urlpatterns = [
     path('password_change/', CustomPasswordChangeView.as_view(), name='password_change'),
     path('booking_success/', TemplateView.as_view(template_name='booking_success.html'), name='booking_success'),
     path('book/', book_room, name='book_room'),
+=======
+
+
+    #ฟังก์ชั่นbooking user
+    path('bookings/', booking_list, name='booking_list'),
+    path('booking/create/', create_booking, name='create_booking'),
+    
+    path('check-booking/', check_booking, name='check_booking'),
+
+
+
+>>>>>>> 81dd2abc103a00730d177ff73732224cef677520
 ]
