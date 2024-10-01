@@ -8,7 +8,7 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2', 'role']
         help_texts = {
             'username': None,  # ลบข้อความอธิบายสำหรับชื่อผู้ใช้
             'email': None,     # ลบข้อความอธิบายสำหรับอีเมล

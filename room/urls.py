@@ -8,7 +8,7 @@ urlpatterns = [
     path('user_dashboard/', user_dashboard, name='user_dashboard'),
     path('register/', register, name='register'),
     path('login/',user_login, name='login'),
-    path('logout/',logout, name='user_login'),
+    path('logout/',logout, name='logout'),
     path('history/',history, name='history'),
 
     #เพิ่มห้อง admin
