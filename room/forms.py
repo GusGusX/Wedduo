@@ -8,7 +8,7 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'role']
+        fields = ['username', 'email', 'password1', 'password2']
         help_texts = {
             'username': None,  # ลบข้อความอธิบายสำหรับชื่อผู้ใช้
             'email': None,     # ลบข้อความอธิบายสำหรับอีเมล
@@ -23,10 +23,17 @@ class RoomForm(forms.ModelForm):
         model = Room
         fields = ['room_name', 'room_image', 'booking_status', 'price']
 
+
+
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = ['room', 'start_date', 'end_date']
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+        
 
 class FeedbackForm(forms.ModelForm):
     class Meta:
